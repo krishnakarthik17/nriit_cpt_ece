@@ -1,0 +1,444 @@
+import random
+
+width = 10
+height = 10
+
+def print_board(snake, food):
+    for y in range(height):
+        for x in range(width):
+            if [x, y] == food:
+                print("F", end=" ")
+            elif [x, y] in snake:
+                print("S", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+    print()
+
+def move_snake(snake, direction):
+    head = snake[-1]
+
+    if direction == "up":
+        new_head = [head[0], head[1] - 1]
+    elif direction == "down":
+        new_head = [head[0], head[1] + 1]
+    elif direction == "left":
+        new_head = [head[0] - 1, head[1]]
+    elif direction == "right":
+        new_head = [head[0] + 1, head[1]]
+    else:
+        print("Invalid direction! Use up/down/left/right.")
+        return snake, "invalid"
+
+    # Wall collision
+    if new_head[0] < 0 or new_head[0] >= width or new_head[1] < 0 or new_head[1] >= height:
+        return snake, "wall"
+
+    # Self collision
+    if new_head in snake:
+        return snake, "self"
+
+    snake.append(new_head)
+    return snake, new_head
+
+def place_food(snake):
+    while True:
+        x = random.randint(0, width - 1)
+        y = random.randint(0, height - 1)
+        if [x, y] not in snake:
+            return [x, y]
+
+def snake_game():
+    snake = [[3,5], [4,5], [5,5]]  # snake length 3
+    food = place_food(snake)
+    score = 0
+
+    while True:
+        print_board(snake, food)
+        print("Score:", score)
+
+        direction = input("Enter direction (up/down/left/right): ").lower()
+
+        snake, result = move_snake(snake, direction)
+
+        if result == "wall":
+            print("You hit the wall! Game Over.")
+            break
+        elif result == "self":
+            print("You hit yourself! Game Over.")
+            break
+        elif result == "invalid":
+            continue
+        elif result == food:
+            score += 1
+            food = place_food(snake)
+        else:
+            snake.pop(0)
+
+    print("Final Score:", score)
+
+snake_game()
+
+
+
+
+
+
+
+
+
+
+
+OUTPUT 
+
+
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . S S S . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . F . . . . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . S S . . . . 
+. . . . . S . . . . 
+. . . . . . . . . . 
+. . F . . . . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . S . . . . 
+. . . . . S . . . . 
+. . . . . S . . . . 
+. . F . . . . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . S . . . . 
+. . . . . S . . . . 
+. . F . . S . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): left
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . S . . . . 
+. . F . S S . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): left
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . F S S S . . . . 
+. . . . . . . . . . 
+
+Score: 0
+Enter direction (up/down/left/right): left
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S S S S . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S S S . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): 
+Invalid direction! Use up/down/left/right.
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S S S . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S S . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): up
+. . . . . . . . . . 
+. . S . . . . . . F 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . S S . . . . . F 
+. . S . . . . . . . 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . S S S . . . . F 
+. . S . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . S S S S . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . . S S S S . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): 
+Invalid direction! Use up/down/left/right.
+. . . . . . . . . . 
+. . . S S S S . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . . . S S S S . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . . . . S S S S F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 1
+Enter direction (up/down/left/right): right
+. . . . . . . . . . 
+. . . . . S S S S S 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 2
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . S S S S 
+. . . . . . . . . S 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 2
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . . S S S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . . 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 2
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . . . S S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . F 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Score: 2
+Enter direction (up/down/left/right): down
+. . . . . . . . . . 
+. . . . . . F . S S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . S 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
